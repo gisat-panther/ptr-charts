@@ -1,7 +1,8 @@
+@use "sass:math";
 @import '~@gisatcz/ptr-core/lib/styles/_variables';
 
 .ptr-chart-legend {
-	margin: m(2/3) 0 0 m(4/3);
+	margin: math.div(2, 3) 0 0 math.div(4, 3);
 	display: flex;
 	flex-wrap: wrap;
 }

@@ -3,7 +3,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import postcss from 'rollup-plugin-postcss';
 import postcssUrl from './build/plugins/postcssUrl';
-import alias from '@rollup/plugin-alias';
 import path from 'path';
 
 const env = process.env.NODE_ENV;
@@ -63,6 +62,7 @@ export default {
 		'@gisatcz/ptr-locales',
 		'@gisatcz/cross-package-react-context',
 		'react-rnd',
+		/@babel\/runtime/,
 		...lodashExternal,
 	],
 	output: {
@@ -80,6 +80,7 @@ export default {
 	plugins: [
 		babel({
 			plugins: ['lodash'],
+			babelHelpers: 'runtime',
 		}),
 		commonjs({
 			include: 'node_modules/**',
@@ -95,12 +96,5 @@ export default {
 			],
 		}),
 		filesize(),
-		// TODO figure out dev and prod version
-		alias({
-			entries: [
-				// { find: '@gisatcz/ptr-core', replacement: 'C:/Users/pvlach/DATA/ptr-core' },
-				// { find: '@gisatcz/cross-package-react-context', replacement: 'C:/Users/pvlach/DATA/cross-package-react-context' }
-			],
-		}),
 	],
 };

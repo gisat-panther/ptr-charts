@@ -1,19 +1,19 @@
 {
-	"presets": [
-		[
-			"@babel/preset-env",
+  "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "modules": "auto"
+        }
+      ],
+      "@babel/preset-react"      
+  ],
+  "plugins": [
+    [
+			"@babel/plugin-transform-runtime",
 			{
-				"modules": "auto"
-			}
-		],
-		"@babel/preset-react"
-	],
-	"plugins": [
-		[
-			"@babel/plugin-proposal-class-properties",
-			{
-				"loose": true
+				"useESModules": false
 			}
 		]
-	]
+  ]
 }
