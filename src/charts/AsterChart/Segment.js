@@ -1,229 +1,229 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import _ from 'lodash';
-import Context from '@gisatcz/cross-package-react-context';
-import './style.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import _ from "lodash";
+import Context from "@gisatcz/cross-package-react-context";
+import "./style.scss";
 
-const HoverContext = Context.getContext('HoverContext');
+const HoverContext = Context.getContext("HoverContext");
 
 class Segment extends React.PureComponent {
-	static contextType = HoverContext;
+  static contextType = HoverContext;
 
-	static propTypes = {
-		arcEnd: PropTypes.array,
-		arcStart: PropTypes.array,
-		origin: PropTypes.array,
-		radius: PropTypes.number,
+  static propTypes = {
+    arcEnd: PropTypes.array,
+    arcStart: PropTypes.array,
+    origin: PropTypes.array,
+    radius: PropTypes.number,
 
-		maxArcEnd: PropTypes.array,
-		maxArcStart: PropTypes.array,
-		maxRadius: PropTypes.number,
+    maxArcEnd: PropTypes.array,
+    maxArcStart: PropTypes.array,
+    maxRadius: PropTypes.number,
 
-		defaultColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		strokeWidth: PropTypes.number,
+    defaultColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    strokeWidth: PropTypes.number,
 
-		nameSourcePath: PropTypes.string,
-		valueSourcePath: PropTypes.string,
-		hoverValueSourcePath: PropTypes.string, //path for value to tooltip - by dafault same like value. Used in relative.
-		data: PropTypes.object,
-		relative: PropTypes.bool,
-		siblings: PropTypes.array,
-	};
+    nameSourcePath: PropTypes.string,
+    valueSourcePath: PropTypes.string,
+    hoverValueSourcePath: PropTypes.string, //path for value to tooltip - by dafault same like value. Used in relative.
+    data: PropTypes.object,
+    relative: PropTypes.bool,
+    siblings: PropTypes.array,
+  };
 
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.ref = React.createRef();
+    this.ref = React.createRef();
 
-		this.onMouseMove = this.onMouseMove.bind(this);
-		this.onMouseOut = this.onMouseOut.bind(this);
-		this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
 
-		this.state = {
-			color: props.defaultColor,
-		};
-	}
+    this.state = {
+      color: props.defaultColor,
+    };
+  }
 
-	onMouseMove(e, data) {
-		if (this.context && this.context.onHover) {
-			this.context.onHover([this.props.itemKey], {
-				popup: {
-					x: e.pageX,
-					y: e.pageY,
-					content: this.getPopupContent(data),
-				},
-			});
-		}
+  onMouseMove(e, data) {
+    if (this.context && this.context.onHover) {
+      this.context.onHover([this.props.itemKey], {
+        popup: {
+          x: e.pageX,
+          y: e.pageY,
+          content: this.getPopupContent(data),
+        },
+      });
+    }
 
-		this.setColor(true);
-	}
+    this.setColor(true);
+  }
 
-	onMouseOver(e, data) {
-		if (this.context && this.context.onHover) {
-			this.context.onHover([this.props.itemKey], {
-				popup: {
-					x: e.pageX,
-					y: e.pageY,
-					content: this.getPopupContent(data),
-				},
-			});
-		}
+  onMouseOver(e, data) {
+    if (this.context && this.context.onHover) {
+      this.context.onHover([this.props.itemKey], {
+        popup: {
+          x: e.pageX,
+          y: e.pageY,
+          content: this.getPopupContent(data),
+        },
+      });
+    }
 
-		this.setColor(true);
-	}
+    this.setColor(true);
+  }
 
-	onMouseOut(e) {
-		if (this.context && this.context.onHoverOut) {
-			this.context.onHoverOut();
-		}
+  onMouseOut(e) {
+    if (this.context && this.context.onHoverOut) {
+      this.context.onHoverOut();
+    }
 
-		this.setColor();
-	}
+    this.setColor();
+  }
 
-	componentDidMount() {
-		this.setColor();
-	}
+  componentDidMount() {
+    this.setColor();
+  }
 
-	componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) {}
 
-	setColor(forceHover) {
-		if (forceHover) {
-			this.setState({
-				color: this.props.highlightColor ? this.props.highlightColor : null,
-			});
-		} else {
-			this.setState({
-				color: this.props.defaultColor ? this.props.defaultColor : null,
-			});
-		}
-	}
+  setColor(forceHover) {
+    if (forceHover) {
+      this.setState({
+        color: this.props.highlightColor ? this.props.highlightColor : null,
+      });
+    } else {
+      this.setState({
+        color: this.props.defaultColor ? this.props.defaultColor : null,
+      });
+    }
+  }
 
-	render() {
-		const props = this.props;
-		let color = this.state.color;
-		let suppressed = false;
-		let highlighted = false;
+  render() {
+    const props = this.props;
+    let color = this.state.color;
+    let suppressed = false;
+    let highlighted = false;
 
-		/* Handle context */
-		if (
-			this.context &&
-			(this.context.hoveredItems || this.context.selectedItems)
-		) {
-			let isHovered = _.includes(this.context.hoveredItems, this.props.itemKey);
-			let isSelected = _.includes(
-				this.context.selectedItems,
-				this.props.itemKey
-			);
-			highlighted = isHovered || isSelected;
+    /* Handle context */
+    if (
+      this.context &&
+      (this.context.hoveredItems || this.context.selectedItems)
+    ) {
+      let isHovered = _.includes(this.context.hoveredItems, this.props.itemKey);
+      let isSelected = _.includes(
+        this.context.selectedItems,
+        this.props.itemKey
+      );
+      highlighted = isHovered || isSelected;
 
-			if (
-				this.props.siblings &&
-				(!!_.intersection(this.context.hoveredItems, this.props.siblings)
-					.length ||
-					!!_.intersection(this.context.selectedItems, this.props.siblings)
-						.length)
-			) {
-				suppressed = !highlighted;
-			}
+      if (
+        this.props.siblings &&
+        (!!_.intersection(this.context.hoveredItems, this.props.siblings)
+          .length ||
+          !!_.intersection(this.context.selectedItems, this.props.siblings)
+            .length)
+      ) {
+        suppressed = !highlighted;
+      }
 
-			if (isHovered || isSelected) {
-				color = this.props.highlightColor ? this.props.highlightColor : null;
-			}
-		}
+      if (isHovered || isSelected) {
+        color = this.props.highlightColor ? this.props.highlightColor : null;
+      }
+    }
 
-		let placeholderClasses = classnames('ptr-aster-chart-segment-placeholder', {
-			highlighted: highlighted,
-		});
+    let placeholderClasses = classnames("ptr-aster-chart-segment-placeholder", {
+      highlighted: highlighted,
+    });
 
-		return (
-			<g
-				// key={props.itemKey}
-				onMouseOver={this.onMouseOver}
-				onMouseMove={this.onMouseMove}
-				onMouseOut={this.onMouseOut}
-			>
-				<path
-					className={placeholderClasses}
-					d={`
+    return (
+      <g
+        // key={props.itemKey}
+        onMouseOver={this.onMouseOver}
+        onMouseMove={this.onMouseMove}
+        onMouseOut={this.onMouseOut}
+      >
+        <path
+          className={placeholderClasses}
+          d={`
 						M${props.origin[0]} ${props.origin[1]}
 						L${props.maxArcStart[0]} ${props.maxArcStart[1]}
 						A${props.maxRadius} ${props.maxRadius} 0 0 1 ${props.maxArcEnd[0]} ${props.maxArcEnd[1]}
 						L${props.origin[0]} ${props.origin[1]}
 					`}
-				/>
-				<path
-					className="ptr-aster-chart-segment"
-					style={{
-						fill: color,
-						strokeWidth: this.props.strokeWidth ? this.props.strokeWidth : 1,
-						opacity: suppressed ? 0.15 : 1,
-					}}
-					d={`
+        />
+        <path
+          className="ptr-aster-chart-segment"
+          style={{
+            fill: color,
+            strokeWidth: this.props.strokeWidth ? this.props.strokeWidth : 1,
+            opacity: suppressed ? 0.15 : 1,
+          }}
+          d={`
 						M${props.origin[0]} ${props.origin[1]}
 						L${props.arcStart[0]} ${props.arcStart[1]}
 						A${props.radius} ${props.radius} 0 0 1 ${props.arcEnd[0]} ${props.arcEnd[1]}
 						L${props.origin[0]} ${props.origin[1]}
 					`}
-				/>
-			</g>
-		);
-	}
+        />
+      </g>
+    );
+  }
 
-	getPopupContent() {
-		const props = this.props;
-		let style = {};
+  getPopupContent() {
+    const props = this.props;
+    let style = {};
 
-		let segmentName = _.get(props.data, props.nameSourcePath);
-		let color = this.state.color || props.highlightColor;
-		let value = _.get(props.data, props.valueSourcePath);
-		let customValue = _.get(props.data, props.hoverValueSourcePath);
+    let segmentName = _.get(props.data, props.nameSourcePath);
+    let color = this.state.color || props.highlightColor;
+    let value = _.get(props.data, props.valueSourcePath);
+    let customValue = _.get(props.data, props.hoverValueSourcePath);
 
-		// TODO pass custom units
-		let units = props.relative ? '%' : null;
+    // TODO pass custom units
+    let units = props.relative ? "%" : null;
 
-		let valueString = value;
-		if (value && value % 1 !== 0) {
-			valueString = valueString.toFixed(2);
-		}
+    let valueString = value;
+    if (value && value % 1 !== 0) {
+      valueString = valueString.toFixed(2);
+    }
 
-		if (color) {
-			style.background = color;
-		}
+    if (color) {
+      style.background = color;
+    }
 
-		return (
-			<>
-				<div className="ptr-popup-header">
-					<div className="ptr-popup-record-color" style={style}></div>
-					{segmentName}
-				</div>
-				<div className="ptr-popup-record-group">
-					<div className="ptr-popup-record">
-						<div className="ptr-popup-record-value-group">
-							{customValue ? (
-								<>
-									<span className="value">{customValue}</span>
-									{units && customValue === value ? (
-										<span className="unit">{units}</span>
-									) : null}
-								</>
-							) : (
-								<>
-									{valueString ? (
-										<span className="value">
-											{valueString.toLocaleString()}
-										</span>
-									) : null}
-									{units ? <span className="unit">{units}</span> : null}
-								</>
-							)}
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	}
+    return (
+      <>
+        <div className="ptr-popup-header">
+          <div className="ptr-popup-record-color" style={style}></div>
+          {segmentName}
+        </div>
+        <div className="ptr-popup-record-group">
+          <div className="ptr-popup-record">
+            <div className="ptr-popup-record-value-group">
+              {customValue ? (
+                <>
+                  <span className="value">{customValue}</span>
+                  {units && customValue === value ? (
+                    <span className="unit">{units}</span>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  {valueString ? (
+                    <span className="value">
+                      {valueString.toLocaleString()}
+                    </span>
+                  ) : null}
+                  {units ? <span className="unit">{units}</span> : null}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
 
 export default Segment;

@@ -1,51 +1,52 @@
-@import '~@gisatcz/ptr-core/lib/styles/_variables';
+@use "sass:math";
+@import "~@gisatcz/ptr-core/lib/styles/_variables";
 
 .ptr-chart-legend {
-	margin: m(2/3) 0 0 m(4/3);
-	display: flex;
-	flex-wrap: wrap;
+  margin: math.div(2, 3) 0 0 math.div(4, 3);
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .ptr-chart-legend-item {
-	display: flex;
-	align-items: center;
-	padding: 0 0.3rem;
-	margin-right: 0.3rem;
-	cursor: default;
+  display: flex;
+  align-items: center;
+  padding: 0 0.3rem;
+  margin-right: 0.3rem;
+  cursor: default;
 }
 
 .ptr-chart-legend-item.withNumbers {
-	padding: 0.2rem 0.3rem;
+  padding: 0.2rem 0.3rem;
 }
 
 .ptr-chart-legend-item:hover {
-	background: var(--base20);
+  background: var(--base20);
 }
 
 .ptr-chart-legend-item-icon {
-	min-width: 0.7rem;
-	height: 0.7rem;
-	font-size: $b1;
-	line-height: 1.25rem;
-	text-align: center;
-	color: #000;
+  min-width: 0.7rem;
+  height: 0.7rem;
+  font-size: $b1;
+  line-height: 1.25rem;
+  text-align: center;
+  color: #000;
 }
 
 .ptr-chart-legend-item.withNumbers .ptr-chart-legend-item-icon {
-	min-width: 1.25rem;
-	height: 1.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
 }
 
 .ptr-chart-legend-item-icon.dark {
-	color: #fff;
+  color: #fff;
 }
 
 .ptr-chart-legend-item-name {
-	font-size: $b1;
-	color: var(--base75);
-	padding: 0 0 0 0.3rem;
-	max-width: 12rem;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-size: $b1;
+  color: var(--base75);
+  padding: 0 0 0 0.3rem;
+  max-width: 12rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

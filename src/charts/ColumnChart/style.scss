@@ -1,4 +1,4 @@
-@import '~@gisatcz/ptr-core/lib/styles/_variables';
+@import "~@gisatcz/ptr-core/lib/styles/_variables";
 
 .ptr-column-chart {
 }
@@ -7,35 +7,35 @@
 }
 
 .ptr-column-chart-bar-placeholder {
-	fill: var(--base20);
-	opacity: 0;
+  fill: var(--base20);
+  opacity: 0;
 }
 
 .ptr-column-chart-bar-placeholder:hover,
 .ptr-column-chart-bar-placeholder.visible {
-	opacity: 1;
+  opacity: 1;
 }
 
 .ptr-column-chart-bar {
-	transition-property: height;
-	transition-delay: 1000ms;
-	transition-duration: 1500ms;
-	transition-timing-function: linear;
+  transition-property: height;
+  transition-delay: 1000ms;
+  transition-duration: 1500ms;
+  transition-timing-function: linear;
 }
 
 .ptr-column-chart-bar:not(.stacked-relative):last-child {
-	transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
 }
 
 .ptr-column-chart-bar.hidden {
-	fill: transparent;
+  fill: transparent;
 }
 
 .ptr-column-chart-bar-baseline {
-	stroke: var(--base80);
-	stroke-width: 2;
+  stroke: var(--base80);
+  stroke-width: 2;
 }
 
 .ptr-column-chart-path {
-	fill: var(--accent45);
+  fill: var(--accent45);
 }
