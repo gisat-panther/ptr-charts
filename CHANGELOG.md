@@ -1,3 +1,15 @@
+# v1.4.1 (Wed Oct 13 2021)
+
+#### 🐾 Patch
+
+- Add prettier and pretty-print [#18](https://github.com/gisat-panther/ptr-charts/pull/18) ([@vdubr](https://github.com/vdubr))
+
+#### Authors: 1
+
+- Vojtěch Dubrovský ([@vdubr](https://github.com/vdubr))
+
+---
+
 # v1.4.0 (Tue Oct 12 2021)
 
 #### 🚀 Enhancement
