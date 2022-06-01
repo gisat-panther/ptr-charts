@@ -28,7 +28,7 @@
     "react": "^16.13.1 || ^17.0.2"
   },
   "dependencies": {
-    "@gisatcz/cross-package-react-context": "^0.1.0",
+    "@gisatcz/cross-package-react-context": "^0.1.2-0",
     "@gisatcz/ptr-atoms": "^1.4.0",
     "@gisatcz/ptr-core": "^1.5.0",
     "@gisatcz/ptr-utils": "^1.5.0",

@@ -12,7 +12,7 @@ import cartesianChart from "../cartesianChart/cartesianChart";
 import CartesianChartContent from "../cartesianChart/CartesianChartContent";
 import ChartLegend from "../../ChartLegend";
 
-class LineChart extends React.PureComponent {
+class LineChartXXX extends React.PureComponent {
   static defaultProps = {
     grayingThreshold: 10,
     aggregationThreshold: 50,
@@ -40,6 +40,7 @@ class LineChart extends React.PureComponent {
 
   // TODO axis orientation
   render() {
+    console.log("xxx ptr-charts");
     const props = this.props;
 
     /* data preparation */
@@ -396,4 +397,4 @@ class LineChart extends React.PureComponent {
   }
 }
 
-export default cartesianChart(LineChart);
+export default cartesianChart(LineChartXXX);

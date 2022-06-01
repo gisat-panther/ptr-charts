@@ -34,7 +34,7 @@ class Line extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
+    console.log("xxx line");
     this.ref = React.createRef();
 
     this.onMouseMove = this.onMouseMove.bind(this);
