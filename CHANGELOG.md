@@ -1,3 +1,20 @@
+# v1.5.0 (Mon Jun 27 2022)
+
+#### 🚀 Enhancement
+
+- Feature/update package [#28](https://github.com/gisat-panther/ptr-charts/pull/28) ([@vdubr](https://github.com/vdubr))
+- :sparkles: [#25](https://github.com/gisat-panther/ptr-charts/pull/25) ([@vdubr](https://github.com/vdubr))
+
+#### 🐾 Patch
+
+- Fix build actions [#27](https://github.com/gisat-panther/ptr-charts/pull/27) ([@vdubr](https://github.com/vdubr))
+
+#### Authors: 1
+
+- Vojtěch Dubrovský ([@vdubr](https://github.com/vdubr))
+
+---
+
 # v1.4.1 (Wed Oct 13 2021)
 
 #### 🐾 Patch
