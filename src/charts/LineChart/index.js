@@ -40,7 +40,6 @@ class LineChartXXX extends React.PureComponent {
 
   // TODO axis orientation
   render() {
-    console.log("xxx ptr-charts");
     const props = this.props;
 
     /* data preparation */
