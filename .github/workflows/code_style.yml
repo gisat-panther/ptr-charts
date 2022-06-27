@@ -16,6 +16,10 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
+      - name: Set the correct Node version using nvm
+        shell: bash -l {0}
+        run: nvm install
+
       - name: Install
         run: npm i prettier @gisatcz/prettier-config --no-save
 
