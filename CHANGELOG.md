@@ -1,3 +1,15 @@
+# v1.5.2 (Wed Jan 18 2023)
+
+#### 🐾 Patch
+
+- Update build configurations [#38](https://github.com/gisat-panther/ptr-charts/pull/38) ([@vdubr](https://github.com/vdubr))
+
+#### Authors: 1
+
+- Vojtěch Dubrovský ([@vdubr](https://github.com/vdubr))
+
+---
+
 # v1.5.1 (Wed Jan 18 2023)
 
 #### 🐾 Patch
