@@ -1,261 +1,79 @@
-import React from "react";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import _ from "lodash";
+import {
+  get as _get,
+  intersection as _intersection,
+  indexOf as _indexOf,
+} from "lodash";
 import moment from "moment";
 
 import Context from "@gisatcz/cross-package-react-context";
 import "./style.scss";
 
-class Point extends React.PureComponent {
-  static contextType = Context.getContext("HoverContext");
+const Point = ({
+  color,
+  r,
+  itemKey,
+  onMouseMove,
+  data,
+  standalone,
+  xSourcePath,
+  ySourcePath,
+  zSourcePath,
+  onMouseOver,
+  siblings,
+  highlighted,
+  hidden,
+  xOptions,
+  yOptions,
+  zOptions,
+  symbol,
+  x,
+  y,
+  onMouseOut,
+  name,
+  xScaleType,
+}) => {
+  const context = useContext(Context.getContext("HoverContext"));
 
-  static propTypes = {
-    itemKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    data: PropTypes.object,
-    name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    x: PropTypes.number,
-    y: PropTypes.number,
-    r: PropTypes.number,
-    onMouseMove: PropTypes.func,
-    onMouseOut: PropTypes.func,
-    onMouseOver: PropTypes.func,
-    color: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    highlighted: PropTypes.bool,
+  const [radius, setRadius] = useState(r);
 
-    xScaleType: PropTypes.string,
-
-    xSourcePath: PropTypes.string,
-    ySourcePath: PropTypes.string,
-    zSourcePath: PropTypes.string,
-    xOptions: PropTypes.object,
-    yOptions: PropTypes.object,
-    zOptions: PropTypes.object,
-
-    standalone: PropTypes.bool,
-    siblings: PropTypes.array,
-    symbol: PropTypes.string,
-    hidden: PropTypes.bool,
+  const onClick = () => {
+    if (context && context.onClick) {
+      context.onClick([itemKey]);
+    }
   };
 
-  constructor(props) {
-    super(props);
-
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onClick = this.onClick.bind(this);
-
-    this.state = {
-      radius: props.r,
-    };
-  }
-
-  onClick() {
-    if (this.context && this.context.onClick) {
-      this.context.onClick([this.props.itemKey]);
-    }
-  }
-
-  onMouseMove(e) {
-    if (this.props.onMouseMove) {
-      this.props.onMouseMove(e, this.props.data);
-    }
-
-    if (this.props.standalone && this.context && this.context.onHover) {
-      this.context.onHover([this.props.itemKey], {
-        popup: {
-          x: e.pageX,
-          y: e.pageY,
-          content: this.getPopupContent(),
-        },
-      });
-    }
-
-    if (!this.props.zSourcePath) {
-      this.setState({
-        radius: this.props.r + 3,
-      });
-    }
-  }
-
-  onMouseOver(e) {
-    if (this.props.onMouseOver) {
-      this.props.onMouseOver(e, this.props.data);
-    }
-
-    if (this.props.standalone && this.context && this.context.onHover) {
-      this.context.onHover([this.props.itemKey], {
-        popup: {
-          x: e.pageX,
-          y: e.pageY,
-          content: this.getPopupContent(),
-        },
-      });
-    }
-
-    if (!this.props.zSourcePath) {
-      this.setState({
-        radius: this.props.r + 3,
-      });
-    }
-  }
-
-  onMouseOut(e) {
-    if (this.props.onMouseOut) {
-      this.props.onMouseOut();
-    }
-
-    if (this.props.standalone && this.context && this.context.onHoverOut) {
-      this.context.onHoverOut();
-    }
-
-    this.setState({
-      radius: this.props.r,
-    });
-  }
-
-  render() {
-    const props = this.props;
-    let suppressed = false;
-
-    /* Handle context */
-    if (
-      this.context &&
-      (this.context.hoveredItems || this.context.selectedItems) &&
-      this.props.itemKey &&
-      this.props.siblings
-    ) {
-      let hoverIntersection = _.intersection(
-        this.context.hoveredItems,
-        this.props.siblings
-      );
-      let selectIntersection = _.intersection(
-        this.context.selectedItems,
-        this.props.siblings
-      );
-      let isHovered = _.indexOf(hoverIntersection, this.props.itemKey);
-      let isSelected = _.indexOf(selectIntersection, this.props.itemKey);
-
-      if (
-        (!!hoverIntersection.length || !!selectIntersection.length) &&
-        isHovered === -1 &&
-        isSelected === -1
-      ) {
-        suppressed = true;
-      }
-    }
-
-    let classes = classnames("ptr-chart-point", {
-      "no-opacity": this.props.highlighted,
-      standalone: this.props.standalone,
-    });
+  const getPopupContent = () => {
+    // const props = this.props;
 
     let style = {};
-    if (props.color) {
-      style.fill = props.color;
-    }
-    if (suppressed) {
-      style.opacity = 0.25;
-    } else if (!this.props.hidden) {
-      style.opacity = 1;
-    }
+    let pointName = name;
+    let xUnits = xOptions && xOptions.unit;
+    let yUnits = yOptions && yOptions.unit;
+    let zUnits = zOptions && zOptions.unit;
 
-    if (this.props.zOptions && this.props.zOptions.showOnHover) {
-      if (this.props.highlighted) {
-        style.opacity = 1;
-      } else {
-        style.opacity = 0;
-      }
-    }
+    let xName = (xOptions && xOptions.name) || "X value";
+    let yName = (yOptions && yOptions.name) || "Y value";
+    let zName = (zOptions && zOptions.name) || "Z value";
 
-    if (props.symbol === "plus") {
-      return this.renderPlusSymbol(
-        props.itemKey,
-        props.x,
-        props.y,
-        this.state.radius,
-        classes,
-        style
-      );
-    } else {
-      return (
-        <circle
-          onMouseOver={this.onMouseOver}
-          onMouseMove={this.onMouseMove}
-          onMouseOut={this.onMouseOut}
-          onClick={this.onClick}
-          className={classes}
-          key={props.itemKey}
-          cx={props.x}
-          cy={props.y}
-          r={this.state.radius}
-          style={style}
-        />
-      );
-    }
-  }
+    let color = color;
 
-  renderPlusSymbol(key, x, y, radius, classes, style) {
-    classes += " path";
-
-    let pathStyle = {};
-    if (this.props.color) {
-      pathStyle.stroke = this.props.color;
-    }
-
-    return (
-      <g
-        key={key}
-        style={style}
-        className={classes}
-        onMouseOver={this.onMouseOver}
-        onMouseMove={this.onMouseMove}
-        onMouseOut={this.onMouseOut}
-        onClick={this.onClick}
-        width={2 * radius}
-        height={2 * radius}
-      >
-        <circle style={{ opacity: 0 }} cx={x} cy={y} r={this.state.radius} />
-        <path
-          style={pathStyle}
-          d={`M${x},${y - radius} L${x},${y + radius} M${x - radius},${y} L${
-            x + radius
-          },${y}`}
-        />
-      </g>
-    );
-  }
-
-  getPopupContent() {
-    const props = this.props;
-
-    let style = {};
-    let pointName = props.name;
-    let xUnits = props.xOptions && props.xOptions.unit;
-    let yUnits = props.yOptions && props.yOptions.unit;
-    let zUnits = props.zOptions && props.zOptions.unit;
-
-    let xName = (props.xOptions && props.xOptions.name) || "X value";
-    let yName = (props.yOptions && props.yOptions.name) || "Y value";
-    let zName = (props.zOptions && props.zOptions.name) || "Z value";
-
-    let color = this.props.color;
-
-    let xValue = _.get(props.data, props.xSourcePath);
-    let yValue = _.get(props.data, props.ySourcePath);
-    let zValue = _.get(props.data, props.zSourcePath);
+    let xValue = _get(data, xSourcePath);
+    let yValue = _get(data, ySourcePath);
+    let zValue = _get(data, zSourcePath);
 
     let xValueString = xValue;
-    if (props.xScaleType === "time") {
+    if (xScaleType === "time") {
       let time = moment(xValueString);
-      if (props.xOptions) {
-        if (props.xOptions.timeValueLanguage) {
-          time = time.locale(props.xOptions.timeValueLanguage);
+      if (xOptions) {
+        if (xOptions.timeValueLanguage) {
+          time = time.locale(xOptions.timeValueLanguage);
         }
 
-        if (props.xOptions.popupValueFormat) {
-          time = time.format(props.xOptions.popupValueFormat);
+        if (xOptions.popupValueFormat) {
+          time = time.format(xOptions.popupValueFormat);
         } else {
           time = time.format();
         }
@@ -307,7 +125,7 @@ class Point extends React.PureComponent {
             </div>
           </div>
         </div>
-        {this.props.zSourcePath ? (
+        {zSourcePath ? (
           <div className="ptr-popup-record-group">
             <div className="ptr-popup-record">
               {<div className="ptr-popup-record-attribute">{zName}</div>}
@@ -322,7 +140,182 @@ class Point extends React.PureComponent {
         ) : null}
       </>
     );
+  };
+
+  const selfOnMouseMove = (e) => {
+    if (onMouseMove) {
+      onMouseMove(e, data);
+    }
+    if (standalone && context && context.onHover) {
+      context.onHover([itemKey], {
+        popup: {
+          x: e.pageX,
+          y: e.pageY,
+          content: getPopupContent(),
+        },
+      });
+    }
+
+    if (!zSourcePath) {
+      setRadius(r + 3);
+    }
+  };
+
+  const selfOnMouseOver = (e) => {
+    if (onMouseOver) {
+      onMouseOver(e, data);
+    }
+    if (standalone && context && context.onHover) {
+      context.onHover([itemKey], {
+        popup: {
+          x: e.pageX,
+          y: e.pageY,
+          content: getPopupContent(),
+        },
+      });
+    }
+
+    if (!zSourcePath) {
+      setRadius(r + 3);
+    }
+  };
+
+  const selfOnMouseOut = (e) => {
+    if (onMouseOut) {
+      onMouseOut();
+    }
+
+    if (standalone && context && context.onHoverOut) {
+      context.onHoverOut();
+    }
+
+    setRadius(r);
+  };
+
+  const renderPlusSymbol = (key, x, y, classes, style) => {
+    classes += " path";
+
+    let pathStyle = {};
+    if (color) {
+      pathStyle.stroke = color;
+    }
+
+    return (
+      <g
+        key={key}
+        style={style}
+        className={classes}
+        onMouseOver={selfOnMouseOver}
+        onMouseMove={selfOnMouseMove}
+        onMouseOut={selfOnMouseOut}
+        onClick={onClick}
+        width={2 * radius}
+        height={2 * radius}
+      >
+        <circle style={{ opacity: 0 }} cx={x} cy={y} r={radius} />
+        <path
+          style={pathStyle}
+          d={`M${x},${y - radius} L${x},${y + radius} M${x - radius},${y} L${
+            x + radius
+          },${y}`}
+        />
+      </g>
+    );
+  };
+
+  // const props = this.props;
+  let suppressed = false;
+
+  /* Handle context */
+  if (
+    context &&
+    (context.hoveredItems || context.selectedItems) &&
+    itemKey &&
+    siblings
+  ) {
+    let hoverIntersection = _intersection(context.hoveredItems, siblings);
+    let selectIntersection = _intersection(context.selectedItems, siblings);
+    let isHovered = _indexOf(hoverIntersection, itemKey);
+    let isSelected = _indexOf(selectIntersection, itemKey);
+
+    if (
+      (!!hoverIntersection.length || !!selectIntersection.length) &&
+      isHovered === -1 &&
+      isSelected === -1
+    ) {
+      suppressed = true;
+    }
   }
-}
+
+  let classes = classnames("ptr-chart-point", {
+    "no-opacity": highlighted,
+    standalone: standalone,
+  });
+
+  let style = {};
+  if (color) {
+    style.fill = color;
+  }
+  if (suppressed) {
+    style.opacity = 0.25;
+  } else if (!hidden) {
+    style.opacity = 1;
+  }
+
+  if (zOptions && zOptions.showOnHover) {
+    if (highlighted) {
+      style.opacity = 1;
+    } else {
+      style.opacity = 0;
+    }
+  }
+
+  if (symbol === "plus") {
+    return renderPlusSymbol(itemKey, x, y, classes, style);
+  } else {
+    return (
+      <circle
+        onMouseOver={selfOnMouseOver}
+        onMouseMove={selfOnMouseMove}
+        onMouseOut={selfOnMouseOut}
+        onClick={onClick}
+        className={classes}
+        key={itemKey}
+        cx={x}
+        cy={y}
+        r={radius}
+        style={style}
+      />
+    );
+  }
+};
+
+Point.propTypes = {
+  itemKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  data: PropTypes.object,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  x: PropTypes.number,
+  y: PropTypes.number,
+  r: PropTypes.number,
+  onMouseMove: PropTypes.func,
+  onMouseOut: PropTypes.func,
+  onMouseOver: PropTypes.func,
+  color: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  highlighted: PropTypes.bool,
+
+  xScaleType: PropTypes.string,
+
+  xSourcePath: PropTypes.string,
+  ySourcePath: PropTypes.string,
+  zSourcePath: PropTypes.string,
+  xOptions: PropTypes.object,
+  yOptions: PropTypes.object,
+  zOptions: PropTypes.object,
+
+  standalone: PropTypes.bool,
+  siblings: PropTypes.array,
+  symbol: PropTypes.string,
+  hidden: PropTypes.bool,
+};
 
 export default Point;
