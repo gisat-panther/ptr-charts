@@ -1,4 +1,4 @@
-import { babel } from "@rollup/plugin-babel";
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import filesize from "rollup-plugin-filesize";
 import postcss from "rollup-plugin-postcss";
@@ -47,6 +47,7 @@ export default {
   input: "src/index.js",
   external: [
     "react",
+    "react/jsx-runtime",
     "prop-types",
     "classnames",
     "chroma-js",
@@ -67,7 +68,7 @@ export default {
   ],
   output: {
     file: {
-      es: pkg.module,
+      es: "dist/index.es.js",
       cjs: pkg.main,
     }[env],
     format: env,
